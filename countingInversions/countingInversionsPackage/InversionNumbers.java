@@ -1,27 +1,85 @@
 package countingInversionsPackage;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Scanner;
+
 public class InversionNumbers {
 
 	public static void main(String[] args) {
+		
 		// TODO Auto-generated method stub
 		
-		//read inputs from the terminal - n inputs -- how do we determine the end of the inputs  
+		Scanner in = new Scanner(System.in); 
 		
-		//the first line of input is 1 positive integer n btn 1 and 10^6
-		
-		//the A[1] - n input is the positive is btn 0 and 10^8.
-		
-		//the functions for the number of inversions
-		
-		//output the results to the terminal
-		
-		//this is the testing for the first commit message 
-		//testing for the inital git commit
-
+		System.out.println(" Enter the integers ");
 		
 		
-		//why do we need the pairs??? -- what are they for???
-		//can we used the n^2 algorithm for the counting inversions?
+        int numOfIntegers = in.nextInt();
+        int [] listOfIntegers = new int[numOfIntegers];
+        
+        
+        for (int i = 0; i < listOfIntegers.length; i++) {
+        	listOfIntegers[i] = in.nextInt();
+		}
+		
+		int numInversions = countNumInversions(listOfIntegers, 0, numOfIntegers );
+		
+		System.out.println("the number of inversions " + numInversions);
+		
+		
+		//we need to use the ONlogN implementation for the counting algorithms
 	}
+	
+	public static int countNumInversions(int[] listOfIntegers, int leftArray, int rightArray) {
+		int numInversions = 0;
+		
+        if (leftArray < rightArray) { 
+            int middle = (leftArray + rightArray) / 2; 
+  
+            numInversions += countNumInversions(listOfIntegers, leftArray, middle); 
+  
+            numInversions += countNumInversions(listOfIntegers, middle + 1, rightArray); 
+  
+            numInversions += mergeAndCount(listOfIntegers, leftArray, middle, rightArray); 
+        } 
+  
+		
+		return numInversions;
+	}
+	
+	
+    private static int mergeAndCount(int[] arr, int l, int m, int r) 
+    { 
+    	
+    	//chnage the method name and the variable names to customize them to your own functionality
+  
+        // Left subarray 
+        int[] left = Arrays.copyOfRange(arr, l, m + 1); 
+  
+        // Right subarray 
+        int[] right = Arrays.copyOfRange(arr, m + 1, r + 1); 
+  
+        int i = 0, j = 0, k = l, swaps = 0; 
+  
+        while (i < left.length && j < right.length) { 
+            if (left[i] <= right[j]) 
+                arr[k++] = left[i++]; 
+            else { 
+                arr[k++] = right[j++]; 
+                swaps += (m + 1) - (l + i); 
+            } 
+        } 
+  
+        // Fill from the rest of the left subarray 
+        while (i < left.length) 
+            arr[k++] = left[i++]; 
+  
+        // Fill from the rest of the right subarray 
+        while (j < right.length) 
+            arr[k++] = right[j++]; 
+  
+        return swaps; 
+    } 
 
 }
